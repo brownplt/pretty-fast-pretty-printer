@@ -1,7 +1,8 @@
 # Pretty Fast Pretty Printer
 
 For an introduction to the Pretty Fast Pretty Printer and how to use it, please
-see the [guide](guide.md). This readme serves as more of a _reference manual_.
+see the [guide](https://github.com/brownplt/pretty-fast-pretty-printer/blob/master/guide.md).
+This readme serves as more of a _reference manual_.
 
 _Pretty printing_ is an approach to printing source code that can adapt how
 things are printed to fit within a maximum line width. It proceeds in two steps:
@@ -26,6 +27,11 @@ The algorithm takes inspiration from:
 [Pretty but not Greedy Printer](https://jyp.github.io/pdf/Prettiest.pdf), and
 3. Ben Lerner's
 [Pyret pretty printer](https://github.com/brownplt/pyret-lang/blob/horizon/src/arr/trove/pprint.arr)
+
+This pretty printer was developed as part of
+[Codemirror Blocks](https://github.com/bootstrapworld/codemirror-blocks).
+Don't let this stop you from using it for your own project, though: it's a
+general purpose library!
 
 
 ## Kinds of Docs
@@ -242,16 +248,3 @@ or like this:
       bodies
       ...
       bodies)
-
-### WithSchemeComment
-
-`withSchemeComment(doc, comment, container)` displays a Scheme-style comment.
-
-- `doc` is what's being commented.
-- `comment` is the comment itself. If it is falsy, there is no comment.
-- `container` is the ast node that owns the comment. This argument is used to
-determine if the comment is a line comment (appears after `container` on the
-same line). Line comments will stay as line comments _as long as they fit on the
-line_. If they don't, they'll be converted into a comment on the previous line.
-
-[TODO: this is very CMB specific, and should be moved to the CMB repo.]
