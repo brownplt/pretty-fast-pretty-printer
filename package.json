@@ -1,0 +1,22 @@
+{
+  "name": "pretty-fast-pretty-printer",
+  "version": "0.9.3",
+  "description": "A linear time pretty printing library",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "TODO"
+  },
+  "keywords": [
+    "pretty",
+    "printing"
+  ],
+  "author": "Justin Pombrio",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^24.7.1"
+  }
+}

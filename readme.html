@@ -1,0 +1,273 @@
+<h1>Pretty Fast Pretty Printer</h1>
+
+<p>For an introduction to the Pretty Fast Pretty Printer and how to use it, please
+see the <a href="guide.md">guide</a>. This readme serves as more of a <em>reference manual</em>.</p>
+
+<p><em>Pretty printing</em> is an approach to printing source code that can adapt how
+things are printed to fit within a maximum line width. It proceeds in two steps:</p>
+
+<ol>
+<li>The source code is converted into a <em>document</em> (instance of <code>Doc</code>), which encodes
+<em>all possible ways</em> that the souce can be printed.</li>
+<li>The document is printed to a maximum line width, using the method
+<code>doc.display(width)</code>.</li>
+</ol>
+
+<p>There are a variety of pretty-printing algorithms. The PFPP uses a custom algorithm
+that displays a document in time <strong>linear</strong> in the number of distinct nodes in
+the document. (Note that this is better than linear in the <em>size</em> of the
+document: if a document contains multiple references to a single sub-document,
+that sub-document is only counted <em>once</em>. This can be an exponential
+improvement.)</p>
+
+<p>The algorithm takes inspiration from:</p>
+
+<ol>
+<li>Wadler's
+<a href="http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf">Prettier Printer</a>,</li>
+<li>Bernardy's
+<a href="https://jyp.github.io/pdf/Prettiest.pdf">Pretty but not Greedy Printer</a>, and</li>
+<li>Ben Lerner's
+<a href="https://github.com/brownplt/pyret-lang/blob/horizon/src/arr/trove/pprint.arr">Pyret pretty printer</a></li>
+</ol>
+
+<h2>Kinds of Docs</h2>
+
+<p>Documents are constructed out of six basic <em>combinators</em>:</p>
+
+<h3><code>txt</code>: Text</h3>
+
+<p><code>txt(string)</code> simply displays <code>string</code>. The <code>string</code> cannot contain newlines.
+<code>txt("")</code> is an empty document.</p>
+
+<p>For example,</p>
+
+<pre><code>txt("Hello, world")
+  .display(80);
+</code></pre>
+
+<p>produces:</p>
+
+<p><code style="background-color:#cde">Hello, world</code></p>
+
+<p>All other combinators will automatically wrap string arguments in <code>txt</code>.
+As a result, you can almost always write <code>string</code> instead of <code>txt(string)</code>.</p>
+
+<h3><code>vert</code>: Vertical Concatenation</h3>
+
+<p><code>vert(doc1, doc2, ...)</code> vertically concatenates documents, from top to bottom.
+(I.e., it joins them with newlines). The vertical concatenation of two
+documents looks like this:</p>
+
+<p><img src="vert.png" alt="Vertical concatenation image" title="" /></p>
+
+<p>For example,</p>
+
+<pre><code>vert("Hello,", "world!")
+  .display(80)
+</code></pre>
+
+<p>produces:</p>
+
+<pre><code style="background-color:#cde">Hello,
+world!
+</code></pre>
+
+<p>Vertical concatenation is associative. Thus:</p>
+
+<pre><code>  vert(X, Y, Z)
+= vert(X, vert(Y, Z))
+= vert(vert(X, Y), Z)
+</code></pre>
+
+<h3><code>horz</code>: Horizontal Concatenation</h3>
+
+<p><code>horz(doc1, doc2, ...)</code> horizontally concatenates documents. The second document
+is indentent to match the last line of the first document (and so forth for the
+third document, etc.). The horizontal concatention of two documents looks like
+this:</p>
+
+<p><img src="horz.png" alt="Horizontal concatenation image" title="" /></p>
+
+<p>For example,</p>
+
+<pre><code>horz("[", vert("first", "second"), "]")
+  .display(80)
+</code></pre>
+
+<p>produces:</p>
+
+<pre><code style="background-color:#cde">[first
+ second]
+</code></pre>
+
+<p>Horizontal concatenation is associative. Thus:</p>
+
+<pre><code>  horz(X, Y, Z)
+= horz(X, horz(Y, Z))
+= horz(horz(X, Y), Z)
+</code></pre>
+
+<p><code>horzArray(docArray)</code> is a variant of <code>horz</code> that takes a single argument that
+is an array of documents. It is equivalent to <code>horz.apply(null, docArray)</code>.</p>
+
+<h3><code>concat</code>: Naive Concatenation</h3>
+
+<p><code>concat(doc1, doc2, ...)</code> naively concatenates documents from left to right. It
+is similar to <code>horz</code>, except that the indentation level is kept <em>fixed</em> for
+all of the documents. The naive concatenation of two documents looks like this:</p>
+
+<p><img src="concat.png" alt="Naive concatenation image" title="" /></p>
+
+<p>You should almost always prefer <code>horz</code> over <code>concat</code>.</p>
+
+<p>As an example,</p>
+
+<pre><code>concat("[", vert("first", "second"), "]")
+  .display(80)
+</code></pre>
+
+<p>produces:</p>
+
+<pre><code style="background-color:#cde">[first
+ second]</code></pre>
+
+<p><code>concatArray(docArray)</code> is a variant of <code>concat</code> that takes a single argument
+that is an array of documents. It is equivalent to <code>concat.apply(null, docArray)</code>.</p>
+
+<h3><code>ifFlat</code>: Choose between two Layouts</h3>
+
+<p><code>ifFlat(doc1, doc2)</code> chooses between two documents. It will use <code>doc1</code> if it
+fits entirely on the current line, otherwise it will use <code>doc2</code>. More precisely,
+<code>doc1</code> will be used iff:</p>
+
+<ol>
+<li>It can be rendered flat. A "flat" document has no newlines,
+i.e., no <code>vert</code>. And,</li>
+<li>When rendered flat, it fits on the current line without going over
+the pretty printing width.</li>
+</ol>
+
+<h3><code>fullLine</code>: Prevent More on the Same Line</h3>
+
+<p>Finally, <code>fullLine(doc)</code> ensures that nothing is placed after <code>doc</code>, if at all
+possible.</p>
+
+<p>This is helpful for line comments. For example, <code>fullLine("// comment")</code> will
+ensure that (if at all possible) nothing is placed after the comment.</p>
+
+<h2>Other Constructors</h2>
+
+<p>Besides the combinators, there are some other useful "utility" constructors.
+These constructors don't provide any extra power, as they are all defined in
+terms of the combinators described above. But they capture some useful patterns.</p>
+
+<h3>String Templates</h3>
+
+<p>There is also a
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">string template</a>
+shorthand for building a <code>doc</code>, called <code>pretty</code>. Itaccepts template strings that
+may contain newlines. It combines the lines with <code>vert</code>, and the parts of each
+line with <code>horz</code>. For example, this template:</p>
+
+<pre><code>pretty`if (${c}) {\n  ${t}\n} else {\n  ${e}\n}`)
+</code></pre>
+
+<p>pretty prints an <code>if</code> statement across multiple lines:</p>
+
+<pre><code>if (a == b) {
+  a &lt;&lt; 2
+} else {
+  a + b
+}
+</code></pre>
+
+<h3>SepBy</h3>
+
+<p><code>sepBy(sep, vertSep, items)</code> will display either:</p>
+
+<pre><code>items[0] sep items[1] sep ... items[n]
+</code></pre>
+
+<p>if it fits on one line, or:</p>
+
+<pre><code>items[0] vertSep \n items[1] vertSep \n ... items[n]
+</code></pre>
+
+<p>otherwise. (Without the extra spaces; those are there for readability.)</p>
+
+<p>Neither <code>sep</code> nor <code>vertSep</code> may contain newlines.</p>
+
+<h3>Wrap</h3>
+
+<p><code>wrap(sep, vertSep, words)</code> does word wrapping. It combines the <code>words</code> with
+<code>sep</code> when they fit on the same line, or <code>vertSep\n</code> when they don't.</p>
+
+<p>For simple word wrapping, you would use:</p>
+
+<pre><code>wrap(" ", "", words)
+</code></pre>
+
+<p>For word-wrapping a comma-separated list, you would use:</p>
+
+<pre><code>wrap(", ", ",", words)
+</code></pre>
+
+<p>Neither <code>sep</code> nor <code>vertSep</code> may contain newlines.</p>
+
+<h2>S-Expression Constructors</h2>
+
+<p>There are also some constructors for common kinds of s-expressions:</p>
+
+<h3>Standard</h3>
+
+<p><code>standardSexpr(func, args)</code> is rendered like this:</p>
+
+<pre><code> (func args ... args)
+</code></pre>
+
+<p>or like this:</p>
+
+<pre><code> (func
+  args
+  ...
+  args)
+</code></pre>
+
+<h3>Lambda-like</h3>
+
+<p><code>lambdaLikeSexpr(keyword, defn, body)</code> is rendered like this:</p>
+
+<pre><code>(keyword defn body)
+</code></pre>
+
+<p>or like this:</p>
+
+<pre><code>(keyword defn
+  body)
+</code></pre>
+
+<h3>Begin-like</h3>
+
+<p><code>beginLikeSexpr(keyword, bodies)</code> is rendered like this:</p>
+
+<pre><code>(keyword
+  bodies
+  ...
+  bodies)
+</code></pre>
+
+<h3>WithSchemeComment</h3>
+
+<p><code>withSchemeComment(doc, comment, container)</code> displays a Scheme-style comment.</p>
+
+<ul>
+<li><code>doc</code> is what's being commented.</li>
+<li><code>comment</code> is the comment itself. If it is falsy, there is no comment.</li>
+<li><code>container</code> is the ast node that owns the comment. This argument is used to
+determine if the comment is a line comment (appears after <code>container</code> on the
+same line). Line comments will stay as line comments <em>as long as they fit on the
+line</em>. If they don't, they'll be converted into a comment on the previous line.</li>
+</ul>
+
+<p>[TODO: this is very CMB specific, and should be moved to the CMB repo.]</p>
