@@ -57,7 +57,7 @@ As a result, you can almost always write `string` instead of `txt(string)`.
 (I.e., it joins them with newlines). The vertical concatenation of two
 documents looks like this:
 
-![Vertical concatenation image](vert.png)
+![Vertical concatenation image](https://raw.githubusercontent.com/brownplt/pretty-fast-pretty-printer/master/vert.png)
 
 For example,
 
@@ -84,7 +84,7 @@ is indentent to match the last line of the first document (and so forth for the
 third document, etc.). The horizontal concatention of two documents looks like
 this:
 
-![Horizontal concatenation image](horz.png)
+![Horizontal concatenation image](https://raw.githubusercontent.com/brownplt/pretty-fast-pretty-printer/master/horz.png)
 
 For example,
 
@@ -107,13 +107,13 @@ Horizontal concatenation is associative. Thus:
 is an array of documents. It is equivalent to `horz.apply(null, docArray)`.
 
 
-### `concat`: Naive Concatenation
+### `concat`: Simple Concatenation
 
 `concat(doc1, doc2, ...)` naively concatenates documents from left to right. It
 is similar to `horz`, except that the indentation level is kept _fixed_ for
-all of the documents. The naive concatenation of two documents looks like this:
+all of the documents. The simple concatenation of two documents looks like this:
 
-![Naive concatenation image](concat.png)
+![Simple concatenation image](https://raw.githubusercontent.com/brownplt/pretty-fast-pretty-printer/master/concat.png)
 
 You should almost always prefer `horz` over `concat`.
 

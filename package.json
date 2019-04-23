@@ -1,6 +1,6 @@
 {
   "name": "pretty-fast-pretty-printer",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "A linear time pretty printing library",
   "main": "index.js",
   "scripts": {
