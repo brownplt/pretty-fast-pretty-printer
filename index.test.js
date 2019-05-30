@@ -38,7 +38,7 @@ describe("The Pretty-Printing Doc Class", function() {
       .toEqual(["aaaa 1", "b", "  2"]);
   });
 
-  describe("on the example from the documentation", function() {
+  describe("on the example from the old documentation", function() {
     function binop(left, op, right) {
       return ifFlat(
         pretty`${left} ${op} ${right}`,
@@ -65,7 +65,7 @@ describe("The Pretty-Printing Doc Class", function() {
     });
   });
 
-  describe("when rendering the Pyret example from the docs", function() {
+  describe("when rendering the examples from the docs", function() {
 
     function showFunc(name, args, body) {
       let header = horz(txt("fun "), name, txt("("), args, txt("):"));
@@ -83,6 +83,30 @@ describe("The Pretty-Printing Doc Class", function() {
         .toEqual(['fun greet(name): "Welcome back, " + name end']);
       expect(funcExample().display(40))
         .toEqual(['fun greet(name):', '    "Welcome back, " + name', 'end']);
+    });
+
+    it("Horizontal concat should match the docs", function() {
+      expect(horz("BEGIN ", vert("first line", "second line")).display(80))
+        .toEqual(["BEGIN first line", "      second line"]);
+    });
+
+    it("Simple concat should match the docs", function() {
+      expect(concat("BEGIN ", vert("first line", "second line")).display(80))
+        .toEqual(["BEGIN first line", "second line"]);
+    });
+
+    function prettyWhile() {
+      let cond = "CONDITION";
+      let body = "BODY";
+      return vert(
+        horz(txt("while ("), cond, txt(") {")),
+        horz(txt("  "), body),
+        txt("}"));
+    }
+    
+    it("While loops should match the docs", function() {
+      expect(prettyWhile().display(80))
+        .toEqual(["while (CONDITION) {", "  BODY", "}"]);
     });
   });
 

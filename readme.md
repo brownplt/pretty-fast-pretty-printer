@@ -2,7 +2,10 @@
 
 For an introduction to the Pretty Fast Pretty Printer and how to use it, please
 see the [guide](https://github.com/brownplt/pretty-fast-pretty-printer/blob/master/guide.md).
-This readme serves as more of a _reference manual_.
+
+This readme is the **reference manual**.
+
+------
 
 _Pretty printing_ is an approach to printing source code that can adapt how
 things are printed to fit within a maximum line width. It proceeds in two steps:
@@ -12,7 +15,8 @@ _all possible ways_ that the souce can be printed.
 2. The document is printed to a maximum line width, using the method
 `doc.display(width)`.
 
-There are a variety of pretty-printing algorithms. The PFPP uses a custom algorithm
+There are a variety of pretty-printing algorithms. The
+pretty-fast-pretty-printer (hereafter "PFPP") uses a custom algorithm
 that displays a document in time **linear** in the number of distinct nodes in
 the document. (Note that this is better than linear in the _size_ of the
 document: if a document contains multiple references to a single sub-document,
@@ -46,15 +50,17 @@ Documents are constructed out of six basic _combinators_:
 
 For example,
 
+```js
     txt("Hello, world")
       .display(80);
+```
 
 produces:
 
 <code style="background-color:#cde">Hello, world</code>
 
 All other combinators will automatically wrap string arguments in `txt`.
-As a result, you can almost always write `string` instead of `txt(string)`.
+As a result, you can almost always write `"a string"` instead of `txt("a string")`.
 
 
 ### `vert`: Vertical Concatenation
@@ -67,8 +73,10 @@ documents looks like this:
 
 For example,
 
+```js
     vert("Hello,", "world!")
       .display(80)
+```
 
 produces:
 
@@ -86,7 +94,7 @@ Vertical concatenation is associative. Thus:
 ### `horz`: Horizontal Concatenation
 
 `horz(doc1, doc2, ...)` horizontally concatenates documents. The second document
-is indentent to match the last line of the first document (and so forth for the
+is indented to match the last line of the first document (and so forth for the
 third document, etc.). The horizontal concatention of two documents looks like
 this:
 
@@ -94,13 +102,15 @@ this:
 
 For example,
 
-    horz("[", vert("first", "second"), "]")
+```js
+    horz("BEGIN ", vert("first line", "second line"))
       .display(80)
+```
 
 produces:
 
-<pre><code style="background-color:#cde">[first
- second]
+<pre><code style="background-color:#cde">BEGIN first line
+      second line
 </code></pre>
 
 Horizontal concatenation is associative. Thus:
@@ -125,13 +135,16 @@ You should almost always prefer `horz` over `concat`.
 
 As an example,
 
-    concat("[", vert("first", "second"), "]")
-      .display(80)
+```js
+    concat("BEGIN ", vert("first line", "second line"))
+      .display(80))
+```
 
 produces:
 
-<pre><code style="background-color:#cde">[first
- second]</code></pre>
+<pre><code style="background-color:#cde">BEGIN first line
+second line
+</code></pre>
 
 `concatArray(docArray)` is a variant of `concat` that takes a single argument
 that is an array of documents. It is equivalent to `concat.apply(null, docArray)`.
@@ -172,7 +185,9 @@ shorthand for building a `doc`, called `pretty`. Itaccepts template strings that
 may contain newlines. It combines the lines with `vert`, and the parts of each
 line with `horz`. For example, this template:
 
+```js
     pretty`if (${c}) {\n  ${t}\n} else {\n  ${e}\n}`)
+```
 
 pretty prints an `if` statement across multiple lines:
 
