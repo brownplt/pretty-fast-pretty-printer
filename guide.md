@@ -258,12 +258,12 @@ And here's what it produces:
                                                                             labore
                                                                             ...
 
-The issue _now_ is that `vert` _keeps the current indentation_. But that's not
+The issue _now_ is that `horz` _keeps the current indentation_. But that's not
 always what we want!
 
 #### Simple Concatenation
 
-In this case, we want `vert` to reset the indentation to the left side of the
+In this case, we want `horz` to reset the indentation to the left side of the
 paragraph. This actually _cannot be done with the combinators we've introduced
 so far_. There's one final combinator that solves this problem, called `concat`.
 
