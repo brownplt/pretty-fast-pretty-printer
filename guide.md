@@ -1,6 +1,6 @@
 # Pretty Printing Guide
 
-This is the **guide** for the pretty-printing library.
+This is the **guide** for the pretty-fast-pretty-printer.
 
 
 ## What is Pretty-Printing?
@@ -122,7 +122,7 @@ Let's put all of this together with an example: printing `while` loops:
 We can pretty print them like so:
 
 ```js
-    ... supposing we're in a class representing while loops ...
+    // ... supposing we're in a class representing while loops ...
     pretty() {
       let cond = this.condition.pretty();
       let body = this.body.pretty();
@@ -172,7 +172,9 @@ Actually, we can get even more concise. There is a shorthand for building a
 [string template](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
 called `pretty`. Using it, we can simplify down to:
 
+```js
     return pretty`while (${cond}) {\n  ${body}\n}`
+```
 
 The `pretty` template accepts template strings that may contain
 newlines. It combines the lines with `vert`, and the parts of each
@@ -246,7 +248,7 @@ attempt to do so:
     }
     return paragraph;
   }
-```js
+```
 
 And here's what it produces:
 
@@ -299,6 +301,7 @@ purposes, though, you'll want to use `horz`.
 
 ------
 
-That concludes the guide; you should now have what you need to use the PFPP. For
-future reference, you can refer to the more concice
+That concludes the guide; you should now have what you need to use the
+pretty-fast-pretty-printer. For future reference, you can refer to the more
+concice
 [reference manual](https://github.com/brownplt/pretty-fast-pretty-printer).

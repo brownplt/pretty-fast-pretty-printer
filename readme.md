@@ -16,7 +16,7 @@ _all possible ways_ that the souce can be printed.
 `doc.display(width)`.
 
 There are a variety of pretty-printing algorithms. The
-pretty-fast-pretty-printer (hereafter "PFPP") uses a custom algorithm
+pretty-fast-pretty-printer uses a custom algorithm
 that displays a document in time **linear** in the number of distinct nodes in
 the document. (Note that this is better than linear in the _size_ of the
 document: if a document contains multiple references to a single sub-document,
