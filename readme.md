@@ -8,12 +8,14 @@ This readme is the **reference manual**.
 ------
 
 _Pretty printing_ is an approach to printing source code that can adapt how
-things are printed to fit within a maximum line width. It proceeds in two steps:
+things are printed to fit within a maximum line width.
 
-1. The source code is converted into a _document_ (instance of `Doc`), which encodes
-_all possible ways_ that the souce can be printed.
-2. The document is printed to a maximum line width, using the method
-`doc.display(width)`.
+To use this library:
+
+1. Convert the source code you want to print into a _document_ (instance of `Doc`), using the
+   constructors below. The `Doc` will encode _all possible ways_ that the source can be printed.
+2. Print the `Doc` using `doc.display(width)`, where `width` is the maximum allowed line width. This
+   will return a list of lines.
 
 There are a variety of pretty-printing algorithms. The
 pretty-fast-pretty-printer uses a custom algorithm
