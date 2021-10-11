@@ -181,12 +181,17 @@ terms of the combinators described above. But they capture some useful patterns.
 
 There is also a
 [string template](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
-shorthand for building a `doc`, called `pretty`. Itaccepts template strings that
+shorthand for building a `doc`, called `pretty`. It accepts template strings that
 may contain newlines. It combines the lines with `vert`, and the parts of each
-line with `horz`. For example, this template:
+line with `horz`, returning a Doc. For example, this template:
 
 ```js
-    pretty`if (${c}) {\n  ${t}\n} else {\n  ${e}\n}`)
+    let c = "a == b";
+    let t = "a << 2";
+    let e = "a + b";
+
+    pretty`if (${c}) {\n  ${t}\n} else {\n  ${e}\n}`
+      .display(80)
 ```
 
 pretty prints an `if` statement across multiple lines:

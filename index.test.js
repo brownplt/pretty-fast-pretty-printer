@@ -38,6 +38,14 @@ describe("The Pretty-Printing Doc Class", function() {
       .toEqual(["aaaa 1", "b", "  2"]);
   });
 
+  it("Should render the example magic template correctly.", function() {
+    let c = "a == b";
+    let t = "a << 2";
+    let e = "a + b";
+    expect(pretty`if (${c}) {\n  ${t}\n} else {\n  ${e}\n}`.display(80))
+      .toEqual(["if (a == b) {", "  a << 2", "} else {", "  a + b", "}"]);
+  });
+
   describe("on the example from the old documentation", function() {
     function binop(left, op, right) {
       return ifFlat(

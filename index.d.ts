@@ -233,4 +233,4 @@ export function beginLikeSexpr(keyword: DocLike, bodies: DocLike[]): Doc;
  *       a + b
  *     }
  */
-export function pretty(strs: string[], ...vals: DocLike[]): string;
+export function pretty(strs: string[], ...vals: DocLike[]): Doc;
