@@ -161,7 +161,10 @@ fits entirely on the current line, otherwise it will use `doc2`. More precisely,
 1. It can be rendered flat. A "flat" document has no newlines,
    i.e., no `vert`. And,
 2. When rendered flat, it fits on the current line without going over
-   the pretty printing width.
+   the pretty printing width. _NOTE:_ this counts only the portion of the current line contained in
+   the `ifFlat` and to its left; it does not count anything to its right. Mostly this doesn't matter
+   much, but it can result in a document being printed over multiple lines when one would do. If
+   this ends up being an issue, try moving more of the Doc into the `ifFlat` choice.
 
 
 ### `fullLine`: Prevent More on the Same Line
