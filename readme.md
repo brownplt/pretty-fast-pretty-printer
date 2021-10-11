@@ -169,8 +169,10 @@ fits entirely on the current line, otherwise it will use `doc2`. More precisely,
 
 ### `fullLine`: Prevent More on the Same Line
 
-Finally, `fullLine(doc)` ensures that nothing is placed after `doc`, if at all
-possible.
+Finally, `fullLine(doc)` ensures that nothing is placed after `doc`, if at all possible. More
+specifically, `ifFlat` choices will be made such that nothing appears to the right of the
+`fullLine(doc)`, if at all possible. However, if something is displayed _unconditionally_ to the
+right of the `fullLine`, this library will have no choice but to put it there.
 
 This is helpful for line comments. For example, `fullLine("// comment")` will
 ensure that (if at all possible) nothing is placed after the comment.
